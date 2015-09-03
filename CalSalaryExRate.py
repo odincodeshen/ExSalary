@@ -158,7 +158,6 @@ print "......"
 
 if os.path.isfile('SalaryLog.txt'):
     log_f = open('SalaryLog.txt', 'a+')
-    log_f_temp = open('SalaryLogTemp.txt', 'a+')
 else:
     log_f = open('SalaryLog.txt', 'a+')
     string = 'DATE,	CNY_SALARY,	TO_USD,	TO_NTD,	CNY2USD,	USD2NTD,	CNY2NTD\n'    
@@ -174,8 +173,6 @@ log_f.write(string)
 print string
 log_f.close()
 
-
-copyFile('SalaryLog.txt', 'SalaryLogTemp2.txt')
 copyFile('SalaryLog.txt', 'SalaryLog-' + str(today) + '.txt')
 
 '''
