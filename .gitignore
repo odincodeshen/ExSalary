@@ -17,6 +17,9 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# pyinstaller build folder
+build/
+
 # =========================
 # Operating System Files
 # =========================
