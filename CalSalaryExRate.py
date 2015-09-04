@@ -175,6 +175,9 @@ log_f.close()
 
 copyFile('SalaryLog.txt', 'SalaryLog-' + str(today) + '.txt')
 
+if os.path.isfile('..\SalaryLog.txt'):
+    copyFile('SalaryLog.txt', '..\SalaryLog.txt')
+
 '''
 with open('SalaryLog.txt', 'w+') as log_f:
     string = str(today) + ',\t' + str(Salary_CNY) + ',\t' + str(Salary_CNY2USD) + ',\t' + str(Salary_USD2NTD )
