@@ -17,8 +17,18 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+
+
+# Form Odin Shen
 # pyinstaller build folder
 build/
+
+# python obj files
+*.spec
+
+# Temp log files
+SalaryLog-2*
+dist/SalaryLog-2*
 
 # =========================
 # Operating System Files
