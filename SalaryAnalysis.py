@@ -11,24 +11,19 @@ Created on Tue Aug 25 18:09:37 2015
 
 """
 
-from decimal import *
 import csv
 import matplotlib.pyplot as plt
+from decimal import *
 
 
 logfile = 'SalaryLog.txt'
-
-SalaryDateList = []
-UsdSalaryList = []
-NtdSalaryList = []
-
-Cny2UsdRateList = []
-Usd2NtdRateList = []
-Cny2NtdRateList = []
-
 record_list = []
-
 Cny2Usd_conv_Usd2Ntd = []
+NtdSalaryList = []
+PreLog = []
+PreClass = []
+
+
 '''
 def dailyRecord(SalaryDate, UsdSalary, NtdSalary, Cny2UsdRate, Usd2NtdRate):
     return {
@@ -51,12 +46,6 @@ class dailyRecord:
         self.Usd2NtdRate = Usd2NtdRate
         self.Cny2NtdRate = Cny2NtdRate
 
-    def getNtdSalary(self):
-        return self.NtdSalary
-
-    def getUsdSalary(self):
-        return self.UsdSalary
-
     def __str__(self):
         string = str(self.SalaryDate) + ',\t' + str(self.UsdSalary) + ',\t' + str(self.NtdSalary)
         return string
@@ -65,21 +54,21 @@ with open(logfile, 'rb') as csvfile:
     spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
     analysis_list = list(spamreader)
 
-''' pass the first line '''
+## Pass the first line ##
 analysis_list = analysis_list[1:]
 print analysis_list
 
+analysis_list = sorted(analysis_list, key=lambda x: x[0])
 
 for item in analysis_list:
-    SalaryDateList.append(item[0])
-    UsdSalaryList.append(float(Decimal(item[2][1:])))
-    NtdSalaryList.append(float(Decimal(item[3][1:])))
-    Cny2UsdRateList.append(float(Decimal(item[4][1:])))
-    Usd2NtdRateList.append(float(Decimal(item[5][1:])))
-    Cny2NtdRateList.append(float(Decimal(item[6][1:])))
     usd2ntd_conv_cny2usd = float(Decimal(item[4][1:])) * float(Decimal(item[5][1:]))
     Cny2Usd_conv_Usd2Ntd.append(usd2ntd_conv_cny2usd)
-
+    
+    ## Remove duplicate daily log by DATE ##
+    if ( item[0] == PreLog ):
+        record_list.pop()
+    
+    ## Create class for ecah of log ##
     newRecord = dailyRecord(
         item[0],
         float(Decimal(item[2][1:])),
@@ -89,29 +78,18 @@ for item in analysis_list:
         float(Decimal(item[6][1:]))
     )
     record_list.append(newRecord)
-
-'''
-sorted_NtdSalary_record_list = record_list.sort(key=lambda x: x['NtdSalary'])
-print sorted_NtdSalary_record_list
-'''
+    PreLog = item[0]
+    PreClass = newRecord
 
 print '\n\nList all record'
 for item in record_list:
     print item
-    item.getNtdSalary
+    item.NtdSalary
     item.SalaryDate
+    NtdSalaryList.append(item.NtdSalary)
 
-
-'''
-print Usd2NtdRate
-print Cny2UsdRate
-print Cny2Usd_conv_Usd2Ntd
-'''
-
-'''plt.plot(UsdSalary)'''
 plt.plot(NtdSalaryList)
 
 print '\n\nToday\'s record'
 print record_list[len(record_list)-1]
 print 'End Python\n\n'
-
