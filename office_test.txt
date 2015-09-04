@@ -6,3 +6,4 @@ Edit file from master
 edit from branch out
 Looks merge done
 No, try to reset and merge again
+Test stash
