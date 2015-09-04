@@ -92,9 +92,8 @@ for item in analysis_list:
 
 '''
 sorted_NtdSalary_record_list = record_list.sort(key=lambda x: x['NtdSalary'])
-'''
-
 print sorted_NtdSalary_record_list
+'''
 
 print '\n\nList all record'
 for item in record_list:
