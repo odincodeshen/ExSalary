@@ -18,13 +18,13 @@ import matplotlib.pyplot as plt
 
 logfile = 'SalaryLog.txt'
 
-SalaryDate = []
-UsdSalary = []
-NtdSalary = []
+SalaryDateList = []
+UsdSalaryList = []
+NtdSalaryList = []
 
-Cny2UsdRate = []
-Usd2NtdRate = []
-Cny2NtdRate = []
+Cny2UsdRateList = []
+Usd2NtdRateList = []
+Cny2NtdRateList = []
 
 record_list = []
 
@@ -71,12 +71,12 @@ print analysis_list
 
 
 for item in analysis_list:
-    SalaryDate.append(item[0])
-    UsdSalary.append(float(Decimal(item[2][1:])))
-    NtdSalary.append(float(Decimal(item[3][1:])))
-    Cny2UsdRate.append(float(Decimal(item[4][1:])))
-    Usd2NtdRate.append(float(Decimal(item[5][1:])))
-    Cny2NtdRate.append(float(Decimal(item[6][1:])))
+    SalaryDateList.append(item[0])
+    UsdSalaryList.append(float(Decimal(item[2][1:])))
+    NtdSalaryList.append(float(Decimal(item[3][1:])))
+    Cny2UsdRateList.append(float(Decimal(item[4][1:])))
+    Usd2NtdRateList.append(float(Decimal(item[5][1:])))
+    Cny2NtdRateList.append(float(Decimal(item[6][1:])))
     usd2ntd_conv_cny2usd = float(Decimal(item[4][1:])) * float(Decimal(item[5][1:]))
     Cny2Usd_conv_Usd2Ntd.append(usd2ntd_conv_cny2usd)
 
@@ -98,6 +98,9 @@ print sorted_NtdSalary_record_list
 print '\n\nList all record'
 for item in record_list:
     print item
+    item.getNtdSalary
+    item.SalaryDate
+
 
 '''
 print Usd2NtdRate
@@ -106,7 +109,7 @@ print Cny2Usd_conv_Usd2Ntd
 '''
 
 '''plt.plot(UsdSalary)'''
-plt.plot(NtdSalary)
+plt.plot(NtdSalaryList)
 
 print '\n\nToday\'s record'
 print record_list[len(record_list)-1]
