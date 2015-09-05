@@ -1,4 +1,0 @@
-init 
-Insert conflict line from master
-Insert hotfix line here
-"Add one more line" 
