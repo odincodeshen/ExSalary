@@ -1,2 +1,3 @@
 init 
+Insert conflict line from master
 "Add one more line" 
