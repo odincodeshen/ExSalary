@@ -29,6 +29,7 @@ build/
 # Temp log files
 SalaryLog-2*
 dist/SalaryLog-2*
+dist/SalaryLog.txt
 
 # =========================
 # Operating System Files
