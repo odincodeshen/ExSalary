@@ -14,8 +14,7 @@ Created on Tue Aug 25 14:54:12 2015
 
 # import httplib
 import requests
-# from string import split
-import split
+import bs4
 import datetime
 import os.path
 import shutil
@@ -28,8 +27,9 @@ if (sys.version_info.major != 3):
 Salary_CNY = 23000
 
 
-X_2_NTD_RATE_URL = "rate.bot.com.tw"
+X_2_NTD_RATE_URL = "http://rate.bot.com.tw"
 X_2_NTD_RATE_PAGE = "/Pages/Static/UIP003.zh-TW.htm"
+
 
 CNY_2_USD_RATE_URL = "www.findrate.tw"
 CNY_2_USD_RATE_PAGE = "/converter/CNY/USD/100/"
@@ -87,9 +87,17 @@ exchangePage = "/Pages/Static/UIP003.zh-TW.htm"
 # reader = conn.getresponse()
 # pageContext = reader.read()
 url = exchangeURL + exchangePage
-res = requests.get(url)
+# res = requests.get(url)
+res = requests.get('http://www.findrate.tw/converter/CNY/USD/100/')
 res.raise_for_status()
+print(len(res.text))
+soup = bs4.BeautifulSoup(res.text, 'html.parser')
+# exchange = soup.select('#num')
+exchange = soup.select('#right > div.box_01 > table')
+type(exchange)
+print(exchange)
 
+'''
 # Python 2
 # print "Fetch \"美金 (CNY)\" CNY->NTD from " + exchangeURL + exchangePage
 # Python 3
@@ -106,9 +114,10 @@ exchange = split(split(pageContext, ">")[6], "<")[0]
 print('    --> ' + str(exchange))
 ExchangeRate_USD2NTD = float(exchange)
 conn.close()
-
+'''
 
 ''' Get CNY->NTD '''
+'''
 currency = SEARCH_CNY_2_NTD
 conn = httplib.HTTPConnection(exchangeURL, 80)
 conn.request("GET", exchangePage)
@@ -131,12 +140,13 @@ exchange = split(split(pageContext, ">")[6], "<")[0]
 print('    --> ' + str(exchange))
 ExchangeRate_CNY2NTD = float(exchange)
 conn.close()
-
+'''
 
 ''' Get USD->CNY '''
 '''
 exchangeURL =  "www.findrate.tw"
 exchangePage = "/converter/CNY/USD/100/"
+'''
 '''
 exchangeURL = CNY_2_USD_RATE_URL
 exchangePage = CNY_2_USD_RATE_PAGE
@@ -163,6 +173,7 @@ exchange = split(pageContext, " ")[0]
 print('    --> ' + str(exchange))
 ExchangeRate_CNY2USD = float(exchange)
 conn.close()
+'''
 
 '''
 print "--USD->NTD--"
@@ -180,7 +191,7 @@ ExchangeRate_USD2NTD = 30.86000
 ExchangeRate_CNY2NTD = 4.95700
 ExchangeRate_CNY2USD = 0.1615
 '''
-
+'''
 Salary_CNY2USD = Salary_CNY * ExchangeRate_CNY2USD
 Salary_USD2NTD = Salary_CNY2USD * ExchangeRate_USD2NTD
 
@@ -188,10 +199,13 @@ print('......')
 print('Got USD' + str(Salary_CNY2USD))
 print('Got NTD' + str(Salary_USD2NTD))
 print('......')
+'''
 
 ''' Log the Salary_CNY2USD / Salary_USD2NTD into file '''
 ''' DATE,	CNY_SALARY,	TO_USD,	TO_NTD,	CNY2USD,	USD2NTD,	CNY2NTD '''
 
+
+'''
 if os.path.isfile('SalaryLog.txt'):
     log_f = open('SalaryLog.txt', 'a+')
 else:
@@ -219,6 +233,7 @@ copyFile('SalaryLog.txt', 'SalaryLog-' + str(today) + '.txt')
 
 if os.path.isfile('..\SalaryLog.txt'):
     copyFile('SalaryLog.txt', '..\SalaryLog.txt')
+'''
 
 '''
 with open('SalaryLog.txt', 'w+') as log_f:
