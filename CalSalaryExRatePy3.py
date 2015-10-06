@@ -18,7 +18,11 @@ from string import split
 import datetime
 import os.path
 import shutil
+import sys
 
+if (sys.version_info.major != 3):
+    print('This py file only executed on python3')
+    raise AssertionError
 
 Salary_CNY = 23000
 

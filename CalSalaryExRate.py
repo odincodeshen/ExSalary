@@ -6,7 +6,7 @@ Created on Tue Aug 25 14:54:12 2015
 
 @description: auto calculation the exchange rate from my salary
 
-@package: 
+@package:
     1. pyinstaller --onefile CalSalaryExRate.py
     2. exe file will locate on dist floder
     2. http://joelee-testing.blogspot.tw/2015/01/pyinstaller-python-script.html
@@ -17,7 +17,11 @@ from   string import split
 import datetime
 import os.path
 import shutil
+import sys
 
+if (sys.version_info.major != 2):
+    print('This py file only executed on python2')
+    raise AssertionError
 
 Salary_CNY = 23000
 
@@ -160,7 +164,7 @@ if os.path.isfile('SalaryLog.txt'):
     log_f = open('SalaryLog.txt', 'a+')
 else:
     log_f = open('SalaryLog.txt', 'a+')
-    string = 'DATE,	CNY_SALARY,	TO_USD,	TO_NTD,	CNY2USD,	USD2NTD,	CNY2NTD\n'    
+    string = 'DATE,	CNY_SALARY,	TO_USD,	TO_NTD,	CNY2USD,	USD2NTD,	CNY2NTD\n'
     log_f.write(string)
     string = '2015-07-01,\t23000,\t3714.5,\t114629.47,\t0.1615,\t30.86000,\t4.95700\n'
     log_f.write(string)

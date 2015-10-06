@@ -4,7 +4,7 @@ Created on Tue Aug 25 18:09:37 2015
 
 @author: shenlunming
 
-@package: 
+@package:
     1. pyinstaller --onefile MyScript.py
     2. exe file will locate on dist floder
     2. http://joelee-testing.blogspot.tw/2015/01/pyinstaller-python-script.html
@@ -17,9 +17,13 @@ Created on Tue Aug 25 18:09:37 2015
 '''
 
 import csv
+import sys
 import matplotlib.pyplot as plt
 from decimal import *
 
+if (sys.version_info.major != 2):
+    print('This py file only executed on python2')
+    raise AssertionError
 
 logfile = 'SalaryLog.txt'
 record_list = []
@@ -85,7 +89,7 @@ for item in analysis_list:
     ## Remove duplicate daily log by DATE ##
     if ( item[0] == PreLog ):
         record_list.pop()
-    
+
     ## Create class for ecah of log ##
     record_list.append(
                     dailyRecord(

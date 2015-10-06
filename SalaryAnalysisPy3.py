@@ -13,12 +13,18 @@ Created on Tue Aug 25 18:09:37 2015
 
 import csv
 import matplotlib.pyplot as plt
+import sys
+
 '''from decimal import *'''
 
 '''
 """ Add %matplotlib inline once we want run on iPython """
 %matplotlib inline
 '''
+
+if (sys.version_info.major != 3):
+    print('This py file only executed on python3')
+    raise AssertionError
 
 logfile = 'SalaryLog.txt'
 record_list = []
@@ -41,7 +47,6 @@ def dailyRecord(SalaryDate, UsdSalary, NtdSalary, Cny2UsdRate, Usd2NtdRate):
         'Cny2NtdRate': Cny2NtdRate
     }
 '''
-
 
 # record class for daily report
 class dailyRecord:
