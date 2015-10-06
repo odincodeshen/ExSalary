@@ -14,7 +14,8 @@ Created on Tue Aug 25 14:54:12 2015
 
 # import httplib
 import requests
-from string import split
+# from string import split
+import split
 import datetime
 import os.path
 import shutil
@@ -85,7 +86,7 @@ exchangePage = "/Pages/Static/UIP003.zh-TW.htm"
 # conn.request("GET", exchangePage)
 # reader = conn.getresponse()
 # pageContext = reader.read()
-
+url = exchangeURL + exchangePage
 res = requests.get(url)
 res.raise_for_status()
 
