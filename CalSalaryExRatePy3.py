@@ -18,21 +18,27 @@ import datetime
 import os.path
 import shutil
 import sys
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
 # +++++++++++++++++++++ #
 #   Input parameters    #
 Salary_CNY = 23000
 Salary_USD_Prox = 3600  # 6.388 USD/CNY
+logging.disable(logging.DEBUG)
 # --------------------- #
-
 
 if (sys.version_info.major != 3):
     print('This py file only executed on python3')
     raise AssertionError
 
+'''
 X_2_NTD_RATE_URL = "http://rate.bot.com.tw"
 X_2_NTD_RATE_PAGE = "/Pages/Static/UIP003.zh-TW.htm"
-
 
 CNY_2_USD_RATE_URL = "www.findrate.tw"
 CNY_2_USD_RATE_PAGE = "/converter/CNY/USD/100/"
@@ -40,7 +46,7 @@ CNY_2_USD_RATE_PAGE = "/converter/CNY/USD/100/"
 SEARCH_USD_2_NTD = "美金 (USD)"
 SEARCH_CNY_2_NTD = "人民幣 (CNY)"
 SEARCH_CNY_2_USD = "1 CNY = "
-
+'''
 
 def copyFile(src, dest):
     try:
@@ -75,8 +81,10 @@ Salary_CNY2USD = 3600
 Salary_CNY2NTD = 118000
 Salary_USD2NTD = 118000
 
+logging.debug('Start Of Program')
+
 today = datetime.date.today()
-print(today)
+logging.info(today)
 
 '''
 exchangeURL =  "rate.bot.com.tw"
@@ -117,10 +125,12 @@ Salary_CNY2USD += int(parser_string[str_end-1]) / 100
 ExchangeRate_CNY2USD = Salary_CNY2USD / 23000
 Salary_CNY2USD = "{0:.1f}".format(Salary_CNY2USD)
 ExchangeRate_CNY2USD = "{0:.3f}".format(ExchangeRate_CNY2USD)
+'''
 print('CNY to USD')
 print('\t' + str(Salary_CNY2USD))
 print('\t\t' + str(ExchangeRate_CNY2USD))
-
+'''
+logging.info('[Get ratio] CNY to USD\t %s \t %s' % (Salary_CNY2USD, ExchangeRate_CNY2USD))
 
 # Get CNY->NTD
 res = requests.get(
@@ -149,10 +159,12 @@ Salary_CNY2NTD += int(parser_string[str_end-1]) / 100
 ExchangeRate_CNY2NTD = Salary_CNY2NTD / 23000
 Salary_CNY2NTD = "{0:.2f}".format(Salary_CNY2NTD)
 ExchangeRate_CNY2NTD = "{0:.3f}".format(ExchangeRate_CNY2NTD)
+'''
 print('CNY to NTD')
 print('\t' + str(Salary_CNY2NTD))
 print('\t\t' + str(ExchangeRate_CNY2NTD))
-
+'''
+logging.info('[Get ratio] CNY to NTD\t %s \t %s' % (Salary_CNY2NTD, ExchangeRate_CNY2NTD))
 
 # Get Prox USD -> NTD
 res = requests.get(
@@ -181,10 +193,12 @@ Salary_USD2NTD += int(parser_string[str_end-1]) / 100
 ExchangeRate_USD2NTD = Salary_USD2NTD / 3600
 Salary_USD2NTD = "{0:.2f}".format(Salary_USD2NTD)
 ExchangeRate_USD2NTD = "{0:.3f}".format(ExchangeRate_USD2NTD)
+'''
 print('Prox USD to NTD')
 print('\t' + str(Salary_USD2NTD))
 print('\t\t' + str(ExchangeRate_USD2NTD))
-
+'''
+logging.info('[Get ratio] USD to NTD (prox)\t %s \t %s' % (Salary_USD2NTD, ExchangeRate_USD2NTD))
 
 '''
 soup = bs4.BeautifulSoup(res.text, 'html.parser')
@@ -213,10 +227,9 @@ ExchangeRate_CNY2USD = 0.1615
 
 
 if os.path.isfile('SalaryLog.txt'):
-    print('Found log file on folder')
-#    log_f = open('SalaryLog.txt', 'a+')
+    logging.info('Found log file on folder')
 else:
-    print('Can\'t found log file on folder')
+    logging.error('Can\'t found log file on folder')
     log_f = open('SalaryLog.txt', 'a+')
     string = 'DATE,	CNY_SALARY,	TO_USD,	TO_NTD,	CNY2USD,	USD2NTD,	CNY2NTD\n'
     log_f.write(string)
@@ -233,7 +246,7 @@ string += ',\t' + str(ExchangeRate_CNY2USD)
 string += ',\t' + str(ExchangeRate_USD2NTD)
 string += ',\t' + str(ExchangeRate_CNY2NTD) + '\n'
 
-print(string)
+logging.info(string)
 log_f.write(string)
 log_f.close()
 
@@ -241,3 +254,5 @@ copyFile('SalaryLog.txt', 'SalaryLog-' + str(today) + '.txt')
 
 if os.path.isfile('..\SalaryLog.txt'):
     copyFile('SalaryLog.txt', '..\SalaryLog.txt')
+
+logging.debug('End Of Program')
