@@ -16,7 +16,7 @@ Created on Tue Aug 25 14:54:12 2015
 import requests
 import bs4
 import datetime
-import os.path
+# import os.path
 import shutil
 import sys
 
@@ -68,6 +68,9 @@ ExchangeRate_USD2NTD = 32.57000
 ExchangeRate_CNY2NTD = 5.00200
 ExchangeRate_CNY2USD = 0.1552
 
+Salary_CNY2USD = 3600
+Salary_CNY2NTD = 118000
+Salary_USD2NTD = 118000
 
 today = datetime.date.today()
 print(today)
@@ -88,14 +91,110 @@ exchangePage = "/Pages/Static/UIP003.zh-TW.htm"
 # pageContext = reader.read()
 url = exchangeURL + exchangePage
 # res = requests.get(url)
-res = requests.get('http://www.findrate.tw/converter/CNY/USD/100/')
+# res = requests.get('http://www.findrate.tw/converter/CNY/USD/100/')
+# res = requests.get('https://www.python.org/')
+
+
+# Can't find the way to select the nth-of child in beautiful soup with select
+# http://stackoverflow.com/questions/24720442/selecting-second-child-in-beautiful-soup-with-soup-select
+# Try to parse the row data on #content
+
+res = requests.get(
+          'http://www.x-rates.com/calculator/?from=CNY&to=USD&amount=23000'
+      )
 res.raise_for_status()
-print(len(res.text))
+# print(len(res.text))
+soup = bs4.BeautifulSoup(res.text, 'html.parser')
+exchange = soup.select('#content')
+# type(exchange)
+parser_string = str(exchange[0])
+# print(parser_string[:550])
+str_start = parser_string.find('<span class="ccOutputRslt">')
+str_start += len('<span class="ccOutputRslt">')
+str_end = str_start + parser_string[str_start:].find('<')
+
+# print(str_start)
+# print(str_end)
+Salary_CNY2USD = int(parser_string[str_start])
+
+for chat in range(str_start+1, str_end-2):
+    if parser_string[chat] >= '0' and parser_string[chat] <= '9':
+        Salary_CNY2USD *= 10
+        Salary_CNY2USD += int(parser_string[chat])
+
+Salary_CNY2USD += int(parser_string[str_end-2]) / 10
+Salary_CNY2USD += int(parser_string[str_end-1]) / 100
+print(Salary_CNY2USD)
+
+
+res = requests.get(
+          'http://www.x-rates.com/calculator/?from=CNY&to=TWD&amount=23000'
+      )
+res.raise_for_status()
+# print(len(res.text))
+soup = bs4.BeautifulSoup(res.text, 'html.parser')
+exchange = soup.select('#content')
+# type(exchange)
+parser_string = str(exchange[0])
+# print(parser_string[:550])
+str_start = parser_string.find('<span class="ccOutputRslt">')
+str_start += len('<span class="ccOutputRslt">')
+str_end = str_start + parser_string[str_start:].find('<')
+
+# print(str_start)
+# print(str_end)
+Salary_CNY2NTD = int(parser_string[str_start])
+for chat in range(str_start+1, str_end-2):
+    if parser_string[chat] >= '0' and parser_string[chat] <= '9':
+        Salary_CNY2NTD *= 10
+        Salary_CNY2NTD += int(parser_string[chat])
+
+Salary_CNY2NTD += int(parser_string[str_end-2]) / 10
+Salary_CNY2NTD += int(parser_string[str_end-1]) / 100
+print(Salary_CNY2NTD)
+
+
+res = requests.get(
+          'http://www.x-rates.com/calculator/?from=USD&to=TWD&amount=3600'
+      )
+res.raise_for_status()
+# print(len(res.text))
+soup = bs4.BeautifulSoup(res.text, 'html.parser')
+exchange = soup.select('#content')
+# type(exchange)
+parser_string = str(exchange[0])
+# print(parser_string[:550])
+str_start = parser_string.find('<span class="ccOutputRslt">')
+str_start += len('<span class="ccOutputRslt">')
+str_end = str_start + parser_string[str_start:].find('<')
+
+# print(str_start)
+# print(str_end)
+Salary_USD2NTD = int(parser_string[str_start])
+for chat in range(str_start+1, str_end-2):
+    if parser_string[chat] >= '0' and parser_string[chat] <= '9':
+        Salary_USD2NTD *= 10
+        Salary_USD2NTD += int(parser_string[chat])
+
+Salary_USD2NTD += int(parser_string[str_end-2]) / 10
+Salary_USD2NTD += int(parser_string[str_end-1]) / 100
+print(Salary_USD2NTD)
+
+
+'''
 soup = bs4.BeautifulSoup(res.text, 'html.parser')
 # exchange = soup.select('#num')
-exchange = soup.select('#right > div.box_01 > table')
+# exchange = soup.select('#right > div.box_01 > table')
+# exchange = soup.select('#success-story-2 > blockquote > a')
+# exchange = soup.select(
+                 '#content > div:nth-child(1) > div > div:nth-child(1) > div'
+             )
+exchange = soup.select('#content')
+# exchange = soup.find_all("a", class_="moduleContent bottomMargin")
+
 type(exchange)
 print(exchange)
+'''
 
 '''
 # Python 2
