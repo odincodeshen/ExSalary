@@ -48,6 +48,18 @@ SEARCH_CNY_2_NTD = "人民幣 (CNY)"
 SEARCH_CNY_2_USD = "1 CNY = "
 '''
 
+
+"2015/08/25"
+ExchangeRate_USD2NTD = 32.57000
+ExchangeRate_CNY2NTD = 5.00200
+ExchangeRate_CNY2USD = 0.1552
+ExchangeRate_amount = 0
+
+Salary_CNY2USD = 3600
+Salary_CNY2NTD = 118000
+Salary_USD2NTD = 118000
+
+
 def copyFile(src, dest):
     try:
         shutil.copy(src, dest)
@@ -59,27 +71,29 @@ def copyFile(src, dest):
         print('Error: %s' % e.strerror)
 
 
+def grabExchangeAmount(url):
+    global ExchangeRate_amount
+    res = requests.get(url)
+    res.raise_for_status()
+    soup = bs4.BeautifulSoup(res.text, 'html.parser')
+    exchange = soup.select('#content')
+    parser_string = str(exchange[0])
+    str_start = parser_string.find('<span class="ccOutputRslt">')
+    str_start += len('<span class="ccOutputRslt">')
+    str_end = str_start + parser_string[str_start:].find('<')
+    ExchangeRate_amount = int(parser_string[str_start])
+    for chat in range(str_start+1, str_end-2):
+        if parser_string[chat] >= '0' and parser_string[chat] <= '9':
+            ExchangeRate_amount *= 10
+            ExchangeRate_amount += int(parser_string[chat])
+    ExchangeRate_amount += int(parser_string[str_end-2]) / 10
+    ExchangeRate_amount += int(parser_string[str_end-1]) / 100
+
 '''
 Get Current Exchange Rate
 USD -> NTD : rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm
 CNY -> NTD : rate.bot.com.tw/Pages/Static/UIP003.zh-TW.htm
 '''
-
-
-'''
-"2015/08/25"
-ExchangeRate_USD2NTD = 32.57000
-ExchangeRate_CNY2NTD = 5.00200
-ExchangeRate_CNY2USD = 0.1552
-'''
-"2015/08/25"
-ExchangeRate_USD2NTD = 32.57000
-ExchangeRate_CNY2NTD = 5.00200
-ExchangeRate_CNY2USD = 0.1552
-
-Salary_CNY2USD = 3600
-Salary_CNY2NTD = 118000
-Salary_USD2NTD = 118000
 
 logging.debug('Start Of Program')
 
@@ -98,122 +112,38 @@ exchangePage = "/Pages/Static/UIP003.zh-TW.htm"
 # Try to parse the row data on #content
 
 # Get CNY->USD
-res = requests.get(
-          'http://www.x-rates.com/calculator/?from=CNY&to=USD&amount=' +
-          str(Salary_CNY)
-      )
-res.raise_for_status()
-# print(len(res.text))
-soup = bs4.BeautifulSoup(res.text, 'html.parser')
-exchange = soup.select('#content')
-# type(exchange)
-parser_string = str(exchange[0])
-# print(parser_string[:550])
-str_start = parser_string.find('<span class="ccOutputRslt">')
-str_start += len('<span class="ccOutputRslt">')
-str_end = str_start + parser_string[str_start:].find('<')
-
-# print(str_start)
-# print(str_end)
-Salary_CNY2USD = int(parser_string[str_start])
-for chat in range(str_start+1, str_end-2):
-    if parser_string[chat] >= '0' and parser_string[chat] <= '9':
-        Salary_CNY2USD *= 10
-        Salary_CNY2USD += int(parser_string[chat])
-Salary_CNY2USD += int(parser_string[str_end-2]) / 10
-Salary_CNY2USD += int(parser_string[str_end-1]) / 100
-ExchangeRate_CNY2USD = Salary_CNY2USD / 23000
-Salary_CNY2USD = "{0:.1f}".format(Salary_CNY2USD)
-ExchangeRate_CNY2USD = "{0:.3f}".format(ExchangeRate_CNY2USD)
-'''
-print('CNY to USD')
-print('\t' + str(Salary_CNY2USD))
-print('\t\t' + str(ExchangeRate_CNY2USD))
-'''
+grabExchangeAmount(
+    'http://www.x-rates.com/calculator/?from=CNY&to=USD&amount=' +
+    str(Salary_CNY)
+)
+# Salary_CNY2USD = ExchangeRate_amount
+# ExchangeRate_CNY2USD = Salary_CNY2USD / Salary_CNY
+Salary_CNY2USD = "{0:.1f}".format(ExchangeRate_amount)
+ExchangeRate_CNY2USD = "{0:.3f}".format(ExchangeRate_amount / Salary_CNY)
 logging.info('[Get ratio] CNY to USD\t %s \t %s' % (Salary_CNY2USD, ExchangeRate_CNY2USD))
 
 # Get CNY->NTD
-res = requests.get(
-          'http://www.x-rates.com/calculator/?from=CNY&to=TWD&amount=' +
-          str(Salary_CNY)
-      )
-res.raise_for_status()
-# print(len(res.text))
-soup = bs4.BeautifulSoup(res.text, 'html.parser')
-exchange = soup.select('#content')
-# type(exchange)
-parser_string = str(exchange[0])
-# print(parser_string[:550])
-str_start = parser_string.find('<span class="ccOutputRslt">')
-str_start += len('<span class="ccOutputRslt">')
-str_end = str_start + parser_string[str_start:].find('<')
-# print(str_start)
-# print(str_end)
-Salary_CNY2NTD = int(parser_string[str_start])
-for chat in range(str_start+1, str_end-2):
-    if parser_string[chat] >= '0' and parser_string[chat] <= '9':
-        Salary_CNY2NTD *= 10
-        Salary_CNY2NTD += int(parser_string[chat])
-Salary_CNY2NTD += int(parser_string[str_end-2]) / 10
-Salary_CNY2NTD += int(parser_string[str_end-1]) / 100
-ExchangeRate_CNY2NTD = Salary_CNY2NTD / 23000
-Salary_CNY2NTD = "{0:.2f}".format(Salary_CNY2NTD)
-ExchangeRate_CNY2NTD = "{0:.3f}".format(ExchangeRate_CNY2NTD)
-'''
-print('CNY to NTD')
-print('\t' + str(Salary_CNY2NTD))
-print('\t\t' + str(ExchangeRate_CNY2NTD))
-'''
+grabExchangeAmount(
+    'http://www.x-rates.com/calculator/?from=CNY&to=TWD&amount=' +
+    str(Salary_CNY)
+)
+#Salary_CNY2NTD = ExchangeRate_amount
+#ExchangeRate_CNY2NTD = Salary_CNY2NTD / Salary_CNY
+Salary_CNY2NTD = "{0:.2f}".format(ExchangeRate_amount)
+ExchangeRate_CNY2NTD = "{0:.3f}".format(ExchangeRate_amount / Salary_CNY)
 logging.info('[Get ratio] CNY to NTD\t %s \t %s' % (Salary_CNY2NTD, ExchangeRate_CNY2NTD))
 
 # Get Prox USD -> NTD
-res = requests.get(
-          'http://www.x-rates.com/calculator/?from=USD&to=TWD&amount=' +
-          str(Salary_USD_Prox)
-      )
-res.raise_for_status()
-# print(len(res.text))
-soup = bs4.BeautifulSoup(res.text, 'html.parser')
-exchange = soup.select('#content')
-# type(exchange)
-parser_string = str(exchange[0])
-# print(parser_string[:550])
-str_start = parser_string.find('<span class="ccOutputRslt">')
-str_start += len('<span class="ccOutputRslt">')
-str_end = str_start + parser_string[str_start:].find('<')
-# print(str_start)
-# print(str_end)
-Salary_USD2NTD = int(parser_string[str_start])
-for chat in range(str_start+1, str_end-2):
-    if parser_string[chat] >= '0' and parser_string[chat] <= '9':
-        Salary_USD2NTD *= 10
-        Salary_USD2NTD += int(parser_string[chat])
-Salary_USD2NTD += int(parser_string[str_end-2]) / 10
-Salary_USD2NTD += int(parser_string[str_end-1]) / 100
-ExchangeRate_USD2NTD = Salary_USD2NTD / 3600
-Salary_USD2NTD = "{0:.2f}".format(Salary_USD2NTD)
-ExchangeRate_USD2NTD = "{0:.3f}".format(ExchangeRate_USD2NTD)
-'''
-print('Prox USD to NTD')
-print('\t' + str(Salary_USD2NTD))
-print('\t\t' + str(ExchangeRate_USD2NTD))
-'''
+grabExchangeAmount(
+    'http://www.x-rates.com/calculator/?from=USD&to=TWD&amount=' +
+    str(Salary_USD_Prox)
+)
+#Salary_USD2NTD = ExchangeRate_amount
+#ExchangeRate_USD2NTD = Salary_USD2NTD / Salary_USD_Prox
+Salary_USD2NTD = "{0:.2f}".format(ExchangeRate_amount)
+ExchangeRate_USD2NTD = "{0:.3f}".format(ExchangeRate_amount / Salary_USD_Prox)
 logging.info('[Get ratio] USD to NTD (prox)\t %s \t %s' % (Salary_USD2NTD, ExchangeRate_USD2NTD))
 
-'''
-soup = bs4.BeautifulSoup(res.text, 'html.parser')
-# exchange = soup.select('#num')
-# exchange = soup.select('#right > div.box_01 > table')
-# exchange = soup.select('#success-story-2 > blockquote > a')
-# exchange = soup.select(
-                 '#content > div:nth-child(1) > div > div:nth-child(1) > div'
-             )
-exchange = soup.select('#content')
-# exchange = soup.find_all("a", class_="moduleContent bottomMargin")
-
-type(exchange)
-print(exchange)
-'''
 
 "2015/07/01"
 '''
@@ -224,7 +154,6 @@ ExchangeRate_CNY2USD = 0.1615
 
 ''' Log the Salary_CNY2USD / Salary_USD2NTD into file '''
 ''' DATE,	CNY_SALARY,	TO_USD,	TO_NTD,	CNY2USD,	USD2NTD,	CNY2NTD '''
-
 
 if os.path.isfile('SalaryLog.txt'):
     logging.info('Found log file on folder')
