@@ -48,9 +48,13 @@ def dailyRecord(SalaryDate, UsdSalary, NtdSalary, Cny2UsdRate, Usd2NtdRate):
     }
 '''
 
+
 # record class for daily report
 class dailyRecord:
-    def __init__(self, SalaryDate, UsdSalary, NtdSalary, Cny2UsdRate, Usd2NtdRate, Cny2NtdRate):
+    def __init__(
+        self, SalaryDate, UsdSalary, NtdSalary,
+        Cny2UsdRate, Usd2NtdRate, Cny2NtdRate
+    ):
         self.SalaryDate = SalaryDate
         self.UsdSalary = UsdSalary
         self.NtdSalary = NtdSalary

@@ -120,30 +120,40 @@ grabExchangeAmount(
 # ExchangeRate_CNY2USD = Salary_CNY2USD / Salary_CNY
 Salary_CNY2USD = "{0:.1f}".format(ExchangeRate_amount)
 ExchangeRate_CNY2USD = "{0:.3f}".format(ExchangeRate_amount / Salary_CNY)
-logging.info('[Get ratio] CNY to USD\t %s \t %s' % (Salary_CNY2USD, ExchangeRate_CNY2USD))
+logging.info(
+    '[Get ratio] CNY to USD\t %s \t %s'
+    % (Salary_CNY2USD, ExchangeRate_CNY2USD)
+)
 
 # Get CNY->NTD
 grabExchangeAmount(
     'http://www.x-rates.com/calculator/?from=CNY&to=TWD&amount=' +
     str(Salary_CNY)
 )
-#Salary_CNY2NTD = ExchangeRate_amount
-#ExchangeRate_CNY2NTD = Salary_CNY2NTD / Salary_CNY
+
+# Salary_CNY2NTD = ExchangeRate_amount
+# ExchangeRate_CNY2NTD = Salary_CNY2NTD / Salary_CNY
 Salary_CNY2NTD = "{0:.2f}".format(ExchangeRate_amount)
 ExchangeRate_CNY2NTD = "{0:.3f}".format(ExchangeRate_amount / Salary_CNY)
-logging.info('[Get ratio] CNY to NTD\t %s \t %s' % (Salary_CNY2NTD, ExchangeRate_CNY2NTD))
+logging.info(
+    '[Get ratio] CNY to NTD\t %s \t %s'
+    % (Salary_CNY2NTD, ExchangeRate_CNY2NTD)
+)
 
 # Get Prox USD -> NTD
 grabExchangeAmount(
     'http://www.x-rates.com/calculator/?from=USD&to=TWD&amount=' +
     str(Salary_USD_Prox)
 )
-#Salary_USD2NTD = ExchangeRate_amount
-#ExchangeRate_USD2NTD = Salary_USD2NTD / Salary_USD_Prox
+
+# Salary_USD2NTD = ExchangeRate_amount
+# ExchangeRate_USD2NTD = Salary_USD2NTD / Salary_USD_Prox
 Salary_USD2NTD = "{0:.2f}".format(ExchangeRate_amount)
 ExchangeRate_USD2NTD = "{0:.3f}".format(ExchangeRate_amount / Salary_USD_Prox)
-logging.info('[Get ratio] USD to NTD (prox)\t %s \t %s' % (Salary_USD2NTD, ExchangeRate_USD2NTD))
-
+logging.info(
+    '[Get ratio] USD to NTD (prox)\t %s \t %s'
+    % (Salary_USD2NTD, ExchangeRate_USD2NTD)
+)
 
 "2015/07/01"
 '''
